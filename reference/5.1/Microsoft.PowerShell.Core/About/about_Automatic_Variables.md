@@ -1,7 +1,8 @@
 ---
+description:  Describes variables that store state information for PowerShell. These variables are created and maintained by PowerShell. 
 keywords: powershell,cmdlet
-locale: en-us
-ms.date: 08/12/2019
+Locale: en-US
+ms.date: 08/14/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-5.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: about_Automatic_Variables
@@ -57,7 +58,7 @@ For native commands (executables), `$?` is set to **True** when `$LASTEXITCODE`
 is 0, and set to **False** when `$LASTEXITCODE` is any other value.
 
 > [!NOTE]
-> Until PowerShell 7, containing a statement withing parentheses `(...)`,
+> Until PowerShell 7, containing a statement within parentheses `(...)`,
 > subexpression syntax `$(...)` or array expression `@(...)` always reset
 > `$?` to **True**, so that `(Write-Error)` shows `$?` as **True**.
 > This has been changed in PowerShell 7, so that `$?` will always reflect
@@ -188,9 +189,14 @@ blocks (which are unnamed functions).
   > You cannot use the `$input` variable inside both the Process block and the
   > End block in the same function or script block.
 
+Since `$input` is an enumerator, accessing any of it's properties causes
+`$input` to no longer be available. You can store `$input` in another variable to
+reuse the `$input` properties.
+
 Enumerators contain properties and methods you can use to retrieve loop values
 and change the current loop iteration. For more information, see
 [Using Enumerators](#using-enumerators).
+
 
 ### $LastExitCode
 
@@ -533,6 +539,9 @@ and change the current loop iteration. For more information, see
 In a script block that defines a script property or script method, the
 `$this` variable refers to the object that is being extended.
 
+In a custom class, the `$this` variable refers to the class object itself
+allowing access to properties and methods defined in the class.
+
 ### $true
 
 Contains **True**. You can use this variable to represent **True** in commands
@@ -565,7 +574,7 @@ the enumerator has passed the end of the collection.
 > [!NOTE]
 > The **Boolean** value returned my **MoveNext** is sent to the output stream.
 > You can suppress the output by typecasting it to `[void]` or piping it to
-> [Out-Null](../Out-Null.md).
+> [Out-Null](xref:Microsoft.PowerShell.Core.Out-Null).
 >
 > ```powershell
 > $input.MoveNext() | Out-Null

@@ -1,7 +1,8 @@
 ---
 external help file: ThreadJob.dll-Help.xml
-Module Name: threadjob
-ms.date: 12/19/2019
+Locale: en-US
+Module Name: ThreadJob
+ms.date: 01/28/2020
 online version: https://docs.microsoft.com/powershell/module/threadjob/start-threadjob?view=powershell-6&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: Start-ThreadJob
@@ -107,7 +108,6 @@ $j | Wait-Job | Receive-Job
      94   145.80     159.02      18.31   18276   1 pwsh
     101   163.30     222.05      29.00   35928   1 pwsh
 ```
-
 
 ## PARAMETERS
 
@@ -228,8 +228,12 @@ Accept wildcard characters: False
 
 ### -ThrottleLimit
 
-This parameter limits the number of jobs running at one time. As more jobs are started, they are
-queued and wait until the current number of jobs drops below the throttle limit.
+This parameter limits the number of jobs running at one time. As jobs are started, they are queued
+and wait until a thread is available in the thread pool to run the job. The default limit is 5
+threads.
+
+The thread pool size is global to the PowerShell session. Specifying a **ThrottleLimit** in one
+call sets the limit for subsequent calls in the same session.
 
 ```yaml
 Type: System.Int32
@@ -238,7 +242,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

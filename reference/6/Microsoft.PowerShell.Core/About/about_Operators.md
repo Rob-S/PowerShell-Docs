@@ -1,7 +1,8 @@
 ---
+description: Describes the operators that are supported by PowerShell. 
 keywords: powershell,cmdlet
-locale: en-us
-ms.date: 08/28/2018
+Locale: en-US
+ms.date: 10/08/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-6&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: about_Operators
@@ -28,6 +29,9 @@ returns the specified number of copies of each element. You can use arithmetic
 operators on any .NET type that implements them, such as: `Int`, `String`,
 `DateTime`, `Hashtable`, and Arrays.
 
+Bitwise operators (`-band`, `-bor`, `-bxor`, `-bnot`, `-shl`, `-shr`)
+manipulate the bit patterns in values.
+
 For more information, see [about_Arithmetic_Operators](about_Arithmetic_Operators.md).
 
 ### Assignment Operators
@@ -53,9 +57,6 @@ reference set (`-in`, `-notin`, `-contains`, `-notcontains`).
 
 Type comparison operators (`-is`, `-isnot`) determine whether an object is of a
 given type.
-
-Bitwise comparison operators (`-bAND`, `-bOR`, `-bXOR`, `-bNOT`) manipulate the
-bit patterns in values.
 
 For more information, see [about_Comparison_Operators](about_Comparison_Operators.md).
 
@@ -122,7 +123,7 @@ However, in PowerShell, there are additional behaviors.
 
 - When used as the first segment of a pipeline, wrapping a command or
   expression in parentheses invariably causes _enumeration_ of the expression
-  result. if the parentheses wrap a _command_, it is run to completion with all
+  result. If the parentheses wrap a _command_, it is run to completion with all
   output _collected in memory_ before the results are sent through the
   pipeline.
 
@@ -160,9 +161,9 @@ item, the array has only one member.
 #### Call operator `&`
 
 Runs a command, script, or script block. The call operator, also known as the
-"invocation operator," lets you run commands that are stored in variables and
+"invocation operator", lets you run commands that are stored in variables and
 represented by strings or script blocks. The call operator executes in a child
-scope. For more about scopes, see [about_scopes](about_scopes.md).
+scope. For more about scopes, see [about_Scopes](about_Scopes.md).
 
 This example stores a command in a string and executes it using the call
 operator.
@@ -188,23 +189,23 @@ cmdlet, function, script file, or operable program. Check the spelling of
 the name, or if a path was included, verify that the path is correct and
 try again.
 At line:1 char:2
-+ &$c
++ & $c
 +  ~~
     + CategoryInfo          : ObjectNotFound: (Get-Service -Name Spooler:String) [], CommandNotFoundException
     + FullyQualifiedErrorId : CommandNotFoundException
 ```
 
-The [Invoke-Expression](../../Microsoft.PowerShell.Utility/Invoke-Expression.md)
+The [Invoke-Expression](xref:Microsoft.PowerShell.Utility.Invoke-Expression)
 cmdlet can execute code that causes parsing errors when using the call
 operator.
 
 ```
-PS> &"1+1"
+PS> & "1+1"
 & : The term '1+1' is not recognized as the name of a cmdlet, function, script
 file, or operable program. Check the spelling of the name, or if a path was
 included, verify that the path is correct and try again.
 At line:1 char:2
-+ &"1+1"
++ & "1+1"
 +  ~~~~~
     + CategoryInfo          : ObjectNotFound: (1+1:String) [], CommandNotFoundException
     + FullyQualifiedErrorId : CommandNotFoundException
@@ -230,7 +231,7 @@ Mode                LastWriteTime         Length Name
 
 PS C:\Scripts> ".\script name with spaces.ps1"
 .\script name with spaces.ps1
-PS C:\Scripts> &".\script name with spaces.ps1"
+PS C:\Scripts> & ".\script name with spaces.ps1"
 Hello World!
 ```
 
@@ -240,7 +241,7 @@ For more about script blocks, see [about_Script_Blocks](about_Script_Blocks.md).
 
 Runs the pipeline before it in the background, in a PowerShell job. This
 operator acts similarly to the UNIX control operator ampersand (`&`), which
-runs the command before it asynchronously in sub shell as a job.
+runs the command before it asynchronously in subshell as a job.
 
 This operator is functionally equivalent to `Start-Job`. The following example
 demonstrates basic usage of the background job operator.
@@ -275,7 +276,6 @@ Receive-Job $job -Wait
 ```
 
 ```powershell
-$job = Get-Process -Name pwsh &
 Remove-Job $job
 ```
 
@@ -308,6 +308,10 @@ Receive-Job $job -Wait
 If you want to run multiple commands, each in their own background process but
 all on one line, simply place `&` between and after each of the commands.
 
+```powershell
+Get-Process -Name pwsh & Get-Service -Name BITS & Get-CimInstance -ClassName Win32_ComputerSystem &
+```
+
 For more information on PowerShell jobs, see [about_Jobs](about_Jobs.md).
 
 #### Cast operator `[ ]`
@@ -316,9 +320,13 @@ Converts or limits objects to the specified type. If the objects cannot be
 converted, PowerShell generates an error.
 
 ```powershell
-[datetime]$birthday = "1/20/88"
-[int64]$a = 34
+[DateTime]"2/20/88" - [DateTime]"1/20/88"
+[Int] (7/2)
+[String] 1 + 0
+[Int] '1' + 0
 ```
+
+A cast can also be performed when a variable is assigned to using [cast notation](about_Variables.md).
 
 #### Comma operator `,`
 
@@ -363,6 +371,17 @@ right side of the operator.
 
 ```output
 1 hello      3.14
+```
+
+If you need to keep the curly braces (`{}`) in the formatted string, you can
+escape them by doubling the curly braces.
+
+```powershell
+"{0} vs. {{0}}" -f 'foo'
+```
+
+```Output
+foo vs. {0}
 ```
 
 For more information, see the [String.Format](/dotnet/api/system.string.format)
@@ -415,7 +434,7 @@ pipeline operator sends the objects one at a time.
 
 ```powershell
 Get-Process | Get-Member
-Get-PSSnapin | Where-Object {$_.vendor -ne "Microsoft"}
+Get-Service | Where-Object {$_.StartType -eq 'Automatic'}
 ```
 
 #### Range operator `..`
@@ -425,8 +444,14 @@ lower boundary.
 
 ```powershell
 1..10
-10..1
 foreach ($a in 1..$max) {Write-Host $a}
+```
+
+You can also create ranges in reverse order.
+
+```powershell
+10..1
+5..-5 | ForEach-Object {Write-Output $_}
 ```
 
 Beginning in PowerShell 6, the range operator works with **Characters** as
@@ -444,9 +469,6 @@ e
 f
 ```
 
-You can also create ranges in reverse order. PowerShell matches the case of
-the boundary characters automatically.
-
 ```powershell
 PS> 'F'..'A'
 F
@@ -459,21 +481,24 @@ A
 
 #### Member access operator `.`
 
-Accesses the properties and methods of an object.
+Accesses the properties and methods of an object. The member name may be an
+expression.
 
 ```powershell
 $myProcess.peakWorkingSet
 (Get-Process PowerShell).kill()
+'OS', 'Platform' | Foreach-Object { $PSVersionTable. $_ }
 ```
 
 #### Static member operator `::`
 
-Calls the static properties operator and methods of a .NET Framework class. To
+Calls the static properties and methods of a .NET Framework class. To
 find the static properties and methods of an object, use the Static parameter
-of the `Get-Member` cmdlet.
+of the `Get-Member` cmdlet.  The member name may be an expression.
 
 ```powershell
-[datetime]::now
+[datetime]::Now
+'MinValue', 'MaxValue' | Foreach-Object { [int]:: $_ }
 ```
 
 ## See also
@@ -485,6 +510,8 @@ of the `Get-Member` cmdlet.
 [about_Comparison_Operators](about_Comparison_Operators.md)
 
 [about_Logical_Operators](about_logical_operators.md)
+
+[about_Operator_Precedence](about_operator_precedence.md)
 
 [about_Type_Operators](about_Type_Operators.md)
 

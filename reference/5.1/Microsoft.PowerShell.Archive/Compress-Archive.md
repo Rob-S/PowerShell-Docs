@@ -1,9 +1,9 @@
 ---
 external help file: Microsoft.PowerShell.Archive-help.xml
 keywords: powershell,cmdlet
-locale: en-us
+Locale: en-US
 Module Name: Microsoft.PowerShell.Archive
-ms.date: 11/06/2019
+ms.date: 02/20/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.archive/compress-archive?view=powershell-5.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: Compress-Archive
@@ -82,9 +82,9 @@ archive file because the **Path** only specifies file names.
 
 ```powershell
 $compress = @{
-Path= "C:\Reference\Draftdoc.docx", "C:\Reference\Images\*.vsd"
-CompressionLevel = "Fastest"
-DestinationPath = "C:\Archives\Draft.Zip"
+  Path = "C:\Reference\Draftdoc.docx", "C:\Reference\Images\*.vsd"
+  CompressionLevel = "Fastest"
+  DestinationPath = "C:\Archives\Draft.Zip"
 }
 Compress-Archive @compress
 ```
@@ -249,7 +249,7 @@ The following are the acceptable values for this parameter:
 - **Optimal**. Processing time is dependent on file size.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 Accepted values: Optimal, NoCompression, Fastest
@@ -266,7 +266,7 @@ Accept wildcard characters: False
 Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: cf
 
@@ -287,7 +287,7 @@ If the file name in **DestinationPath** doesn't have a `.zip` file name extensio
 the `.zip` file name extension.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -303,7 +303,7 @@ Accept wildcard characters: False
 Forces the command to run without asking for user confirmation.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: PathWithForce, LiteralPathWithForce
 Aliases:
 
@@ -324,7 +324,7 @@ To specify multiple paths, and include files in multiple locations in your outpu
 commas to separate the paths.
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: LiteralPathWithUpdate, LiteralPathWithForce, LiteralPath
 Aliases: PSPath
 
@@ -354,7 +354,7 @@ Using wildcards with a root directory affects the archive's contents:
   `-Path C:\Reference\*.*`
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: Path, PathWithUpdate, PathWithForce
 Aliases:
 
@@ -372,7 +372,7 @@ versions that have the same names. You can also add this parameter to add files 
 archive.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: PathWithUpdate, LiteralPathWithUpdate
 Aliases:
 
@@ -388,7 +388,7 @@ Accept wildcard characters: False
 Shows what would happen if the cmdlet runs. The cmdlet isn't run.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
 
@@ -421,6 +421,13 @@ You can pipe a string that contains a path to one or more files.
 Using recursion and sending objects down the pipeline can duplicate files in your archive. For
 example, if you use `Get-ChildItem` with the **Recurse** parameter, each **FileInfo** and
 **DirectoryInfo** object that's sent down the pipeline is added to the archive.
+
+The [ZIP file specification](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT) does not
+specify a standard way of encoding filenames that contain non-ASCII characters. The
+`Compress-Archive` cmdlet uses UTF-8 encoding. Other ZIP archive tools may use a different encoding
+scheme. When extracting files with filenames not stored using UTF-8 encoding, `Expand-Archive` uses
+the raw value found in the archive. This can result in a filename that is different than the source
+filename stored in the archive.
 
 ## RELATED LINKS
 

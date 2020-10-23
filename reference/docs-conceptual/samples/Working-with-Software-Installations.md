@@ -2,6 +2,7 @@
 ms.date:  12/23/2019
 keywords:  powershell,cmdlet
 title:  Working with Software Installations
+description: This article shows how to use WMI to manage software installed in Windows.
 ---
 # Working with Software Installations
 
@@ -177,7 +178,7 @@ Name                           Property
 BB71E00}                       Comments            :
                                Contact             :
                                DisplayVersion      : 5.1.50918.0
-                               HelpLink            : http://go.microsoft.com/fwlink/?LinkID=91955
+                               HelpLink            : https://go.microsoft.com/fwlink/?LinkID=91955
                                HelpTelephone       :
                                InstallDate         : 20190115
                                InstallLocation     : C:\Program Files\Microsoft Silverlight\

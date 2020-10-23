@@ -1,9 +1,9 @@
 ---
 external help file: System.Management.Automation.dll-Help.xml
 keywords: powershell,cmdlet
-locale: en-us
+Locale: en-US
 Module Name: Microsoft.PowerShell.Core
-ms.date: 12/09/2019
+ms.date: 04/08/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/start-job?view=powershell-6&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: Start-Job
@@ -31,18 +31,18 @@ Start-Job [-DefinitionName] <String> [[-DefinitionPath] <String>] [[-Type] <Stri
  [<CommonParameters>]
 ```
 
-### FilePathComputerName
-
-```
-Start-Job [-Name <String>] [-Credential <PSCredential>] [-FilePath] <String>
- [-Authentication <AuthenticationMechanism>] [[-InitializationScript] <ScriptBlock>] [-RunAs32]
- [-PSVersion <Version>] [-InputObject <PSObject>] [-ArgumentList <Object[]>] [<CommonParameters>]
-```
-
 ### LiteralFilePathComputerName
 
 ```
 Start-Job [-Name <String>] [-Credential <PSCredential>] -LiteralPath <String>
+ [-Authentication <AuthenticationMechanism>] [[-InitializationScript] <ScriptBlock>] [-RunAs32]
+ [-PSVersion <Version>] [-InputObject <PSObject>] [-ArgumentList <Object[]>] [<CommonParameters>]
+```
+
+### FilePathComputerName
+
+```
+Start-Job [-Name <String>] [-Credential <PSCredential>] [-FilePath] <String>
  [-Authentication <AuthenticationMechanism>] [[-InitializationScript] <ScriptBlock>] [-RunAs32]
  [-PSVersion <Version>] [-InputObject <PSObject>] [-ArgumentList <Object[]>] [<CommonParameters>]
 ```
@@ -280,11 +280,11 @@ Specifies an array of arguments, or parameter values, for the script that is spe
 **FilePath** parameter or a command specified with the **ScriptBlock** parameter.
 
 Arguments must be passed to **ArgumentList** as single-dimension array argument. For example, a
-comma-separated list. For more information about array dimensions, see
-[about_Arrays](./about/about_arrays.md#rank).
+comma-separated list. For more information about the behavior of **ArgumentList**, see
+[about_Splatting](about/about_Splatting.md#splatting-with-arrays).
 
 ```yaml
-Type: Object[]
+Type: System.Object[]
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases: Args
 
@@ -325,7 +325,7 @@ For more information about the values of this parameter, see
 > credentials that are passed to it can be used to control the network session.
 
 ```yaml
-Type: AuthenticationMechanism
+Type: System.Management.Automation.Runspaces.AuthenticationMechanism
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 Accepted values: Default, Basic, Negotiate, NegotiateWithImplicitCredential, Credssp, Digest, Kerberos
@@ -354,7 +354,7 @@ object and the password is stored as a [SecureString](/dotnet/api/system.securit
 > [How secure is SecureString?](/dotnet/api/system.security.securestring#how-secure-is-securestring).
 
 ```yaml
-Type: PSCredential
+Type: System.Management.Automation.PSCredential
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -378,7 +378,7 @@ isn't saved to disk like triggered scheduled jobs. You can't use the **ArgumentL
 This parameter was introduced in PowerShell 3.0.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: DefinitionName
 Aliases:
 
@@ -402,7 +402,7 @@ For scheduled jobs, the value of the **DefinitionPath** parameter is
 This parameter was introduced in PowerShell 3.0.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: DefinitionName
 Aliases:
 
@@ -423,7 +423,7 @@ When you use this parameter, PowerShell converts the contents of the specified s
 script block and runs the script block as a background job.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: FilePathComputerName
 Aliases:
 
@@ -443,7 +443,7 @@ Use this parameter to prepare the session in which the job runs. For example, yo
 functions, snap-ins, and modules to the session.
 
 ```yaml
-Type: ScriptBlock
+Type: System.Management.Automation.ScriptBlock
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -463,7 +463,7 @@ In the value of the **ScriptBlock** parameter, use the `$input` automatic variab
 input objects.
 
 ```yaml
-Type: PSObject
+Type: System.Management.Automation.PSObject
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -485,9 +485,9 @@ quotation marks. Single quotation marks tell PowerShell not to interpret any cha
 sequences.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: LiteralFilePathComputerName
-Aliases: PSPath
+Aliases: PSPath, LP
 
 Required: True
 Position: Named
@@ -505,7 +505,7 @@ The default friendly name is `Job#`, where `#` is an ordinal number that is incr
 job.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -524,7 +524,7 @@ for this parameter are: `2.0` and `3.0`.
 This parameter was introduced in PowerShell 3.0.
 
 ```yaml
-Type: Version
+Type: System.Version
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -545,7 +545,7 @@ the **RunAs32** parameter, you can't use the **Credential** parameter to specify
 another user.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: ComputerName, FilePathComputerName, LiteralFilePathComputerName
 Aliases:
 
@@ -563,7 +563,7 @@ in curly braces (`{}`). Use the `$input` automatic variable to access the value 
 **InputObject** parameter. This parameter is required.
 
 ```yaml
-Type: ScriptBlock
+Type: System.Management.Automation.ScriptBlock
 Parameter Sets: ComputerName
 Aliases: Command
 
@@ -583,7 +583,7 @@ for standard background jobs.
 This parameter was introduced in PowerShell 3.0.
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: DefinitionName
 Aliases:
 
@@ -639,10 +639,6 @@ the `Invoke-Command` cmdlet to run a `Start-Job` command in a session on a remot
 
 [Remove-Job](Remove-Job.md)
 
-[Resume-Job](Resume-Job.md)
-
 [Stop-Job](Stop-Job.md)
-
-[Suspend-Job](Suspend-Job.md)
 
 [Wait-Job](Wait-Job.md)

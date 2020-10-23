@@ -2,6 +2,7 @@
 ms.date:  12/23/2019
 keywords:  powershell,cmdlet
 title:  Working with Printers
+description: This articles shows how to manage printers in Windows using WMI objects and COM interfaces.
 ---
 # Working with Printers in Windows
 
@@ -41,7 +42,8 @@ To use WMI to set the default printer, find the printer in the **Win32_Printer**
 invoke the **SetDefaultPrinter** method:
 
 ```powershell
-(Get-CimInstance -Class Win32_Printer -Filter "Name='HP LaserJet 5Si'").SetDefaultPrinter()
+$printer = Get-CimInstance -Class Win32_Printer -Filter "Name='HP LaserJet 5Si'"
+Invoke-CimMethod -InputObject $printer -MethodName SetDefaultPrinter
 ```
 
 **WScript.Network** is a little simpler to use, because it has a **SetDefaultPrinter** method that
