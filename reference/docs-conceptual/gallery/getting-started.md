@@ -1,8 +1,7 @@
 ---
 ms.date:  06/12/2017
-contributor:  JKeithB
-keywords:  gallery,powershell,cmdlet,psgallery
 title:  Get Started with the PowerShell Gallery
+description: This article explains how to get started using the PowerShell Gallery and the PowerShellGet cmdlets
 ---
 # Getting Started with the PowerShell Gallery
 
@@ -133,6 +132,8 @@ The PowerShell Gallery uses the following hostnames.
 - `*.powershellgallery.com` - the website
 
 These hostnames should be added to the allow lists that control access from your network.
+
+[!INCLUDE [TLS 1.2 Requirement](../../includes/tls-gallery.md)]
 
 [Find-DscResource]: /powershell/module/powershellget/Find-DscResource
 [Find-Module]: /powershell/module/powershellget/Find-Module
