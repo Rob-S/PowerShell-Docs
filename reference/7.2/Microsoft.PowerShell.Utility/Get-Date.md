@@ -586,7 +586,7 @@ The valid **UFormat specifiers** are displayed in the following table:
 | `%c` | Date and time - abbreviated                                             | Thu Jun 27 08:44:18 2019 |
 | `%D` | Date in mm/dd/yy format                                                 | 06/27/19                 |
 | `%d` | Day of the month - 2 digits                                             | 05                       |
-| `%e` | Day of the month - digit preceded by a space                            | \<space\>5               |
+| `%e` | Day of the month - preceded by a space if only a single digit           | \<space\>5               |
 | `%F` | Date in YYYY-mm-dd format, equal to %Y-%m-%d (the ISO 8601 date format) | 2019-06-27               |
 | `%G` | Same as 'Y'                                                             |                          |
 | `%g` | Same as 'y'                                                             |                          |
@@ -607,9 +607,9 @@ The valid **UFormat specifiers** are displayed in the following table:
 | `%t` | Horizontal tab character                                                |                          |
 | `%T` | Time in 24-hour format                                                  | 17:45:52                 |
 | `%U` | Same as 'W'                                                             |                          |
-| `%u` | Day of the week - number                                                | Sunday = 0               |
+| `%u` | Numeric day of the week (1-7)                                           | Monday = 1, Sunday = 7   |
 | `%V` | Week of the year                                                        | 01-53                    |
-| `%w` | Same as 'u'                                                             |                          |
+| `%w` | Numeric day of the week (0-6)                                           | Sunday = 0, Saturday = 6 |
 | `%W` | Week of the year                                                        | 00-52                    |
 | `%X` | Same as 'T'                                                             |                          |
 | `%x` | Date in standard format for locale                                      | 06/27/19 for English-US  |

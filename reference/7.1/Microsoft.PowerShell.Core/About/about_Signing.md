@@ -140,7 +140,7 @@ topic.
 
 ## Create a self-signed certificate
 
-To create a self-signed certificate in use the `New-SelfSignedCertificate`
+To create a self-signed certificate, use the `New-SelfSignedCertificate`
 cmdlet in the PKI module. This module is introduced in PowerShell 3.0 and is
 included in Windows 8 and Windows Server 2012. For more information, see the
 help topic for the `New-SelfSignedCertificate` cmdlet.
@@ -212,7 +212,7 @@ you are using the **AllSigned** execution policy, you must sign the
 `Add-Signature.ps1` script before you run it.
 
 > [!IMPORTANT]
-> The script must be saved using ASCII or UTF8NoBOM encoding.You can sign a
+> The script must be saved using ASCII or UTF8NoBOM encoding. You can sign a
 > script file that uses a different encoding. But the script fails to run or the
 > module containing the script fails to import.
 

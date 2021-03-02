@@ -69,9 +69,9 @@ You can add additional parameters by calling
 repeatedly.
 
 ```csharp
-PowerShell.Create().AddCommand("Get-Process")
-                   .AddParameter("Name", "PowerShell")
-                   .AddParameter("Id", "12768")
+PowerShell.Create().AddCommand("Get-Command")
+                   .AddParameter("Name", "Get-VM")
+                   .AddParameter("Module", "Hyper-V")
                    .Invoke();
 ```
 
@@ -81,10 +81,10 @@ method.
 
 ```csharp
 IDictionary parameters = new Dictionary<String, String>();
-parameters.Add("Name", "PowerShell");
+parameters.Add("Name", "Get-VM");
 
-parameters.Add("Id", "12768");
-PowerShell.Create().AddCommand("Get-Process")
+parameters.Add("Module", "Hyper-V");
+PowerShell.Create().AddCommand("Get-Command")
    .AddParameters(parameters)
       .Invoke()
 
@@ -113,7 +113,7 @@ is already a script named `MyScript.ps1` in a folder named `D:\PSScripts`.
 
 ```csharp
 PowerShell ps = PowerShell.Create();
-ps.AddScript("D:\PSScripts\MyScript.ps1").Invoke();
+ps.AddScript(File.ReadAllText(@"D:\PSScripts\MyScript.ps1")).Invoke();
 ```
 
 There is also a version of the
@@ -124,7 +124,7 @@ scope.
 
 ```csharp
 PowerShell ps = PowerShell.Create();
-ps.AddScript(@"D:\PSScripts\MyScript.ps1", true).Invoke();
+ps.AddScript(File.ReadAllText(@"D:\PSScripts\MyScript.ps1"), true).Invoke();
 ```
 
 ### Invoking a pipeline synchronously
@@ -195,11 +195,11 @@ namespace HostPS3
       // Create an IAsyncResult object and call the
       // BeginInvoke method to start running the
       // command pipeline asynchronously.
-      IAsyncResult async = ps.BeginInvoke();
+      IAsyncResult asyncpl = ps.BeginInvoke();
 
       // Using the PowerShell.Invoke method, run the command
       // pipeline using the default runspace.
-      foreach (PSObject result in ps.EndInvoke(async))
+      foreach (PSObject result in ps.EndInvoke(asyncpl))
       {
         Console.WriteLine("{0,-20}{1}",
                 result.Members["ProcessName"].Value,

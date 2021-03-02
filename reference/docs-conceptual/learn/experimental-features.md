@@ -1,5 +1,5 @@
 ---
-ms.date: 11/11/2020
+ms.date: 12/14/2020
 title: Using Experimental Features in PowerShell
 description: Lists the currently available experimental features and how to use them.
 ---
@@ -25,20 +25,22 @@ For more information about enabling or disabling these features, see
 
 This article describes the experimental features that are available and how to use the feature.
 
-|                            Name                            |   6.2   |   7.0   |   7.1   |
-| ---------------------------------------------------------- | :-----: | :-----: | :-----: |
-| PSTempDrive (mainstream in PS 7.0+)                        | &check; |         |         |
-| PSUseAbbreviationExpansion (mainstream in PS 7.0+)         | &check; |         |         |
-| PSNullConditionalOperators (mainstream in PS 7.1+)         |         | &check; |         |
-| PSUnixFileStat (non-Windows only - mainstream in PS 7.1+)  |         | &check; |         |
-| PSCommandNotFoundSuggestion                                | &check; | &check; | &check; |
-| PSImplicitRemotingBatching                                 | &check; | &check; | &check; |
-| Microsoft.PowerShell.Utility.PSManageBreakpointsInRunspace |         | &check; | &check; |
-| PSDesiredStateConfiguration.InvokeDscResource              |         | &check; | &check; |
-| PSNativePSPathResolution                                   |         |         | &check; |
-| PSCultureInvariantReplaceOperator                          |         |         | &check; |
-| PSNotApplyErrorActionToStderr                              |         |         | &check; |
-| PSSubsystemPluginModel                                     |         |         | &check; |
+|                            Name                            |   6.2   |   7.0   |   7.1   |   7.2   |
+| ---------------------------------------------------------- | :-----: | :-----: | :-----: | :-----: |
+| PSTempDrive (mainstream in PS 7.0+)                        | &check; |         |         |         |
+| PSUseAbbreviationExpansion (mainstream in PS 7.0+)         | &check; |         |         |         |
+| PSNullConditionalOperators (mainstream in PS 7.1+)         |         | &check; |         |         |
+| PSUnixFileStat (non-Windows only - mainstream in PS 7.1+)  |         | &check; |         |         |
+| PSCommandNotFoundSuggestion                                | &check; | &check; | &check; | &check; |
+| PSImplicitRemotingBatching                                 | &check; | &check; | &check; | &check; |
+| Microsoft.PowerShell.Utility.PSManageBreakpointsInRunspace |         | &check; | &check; | &check; |
+| PSDesiredStateConfiguration.InvokeDscResource              |         | &check; | &check; | &check; |
+| PSNativePSPathResolution                                   |         |         | &check; | &check; |
+| PSCultureInvariantReplaceOperator                          |         |         | &check; | &check; |
+| PSNotApplyErrorActionToStderr                              |         |         | &check; | &check; |
+| PSSubsystemPluginModel                                     |         |         | &check; | &check; |
+| PSAnsiProgress                                             |         |         |         | &check; |
+| PSAnsiRendering                                            |         |         |         | &check; |
 
 ## Microsoft.PowerShell.Utility.PSManageBreakpointsInRunspace
 
@@ -72,6 +74,99 @@ $breakpoint = Get-PSBreakPoint -Runspace $runspace
 In this example, a job is started and a breakpoint is set to break when the `Set-PSBreakPoint` is
 run. The runspace is stored in a variable and passed to the `Get-PSBreakPoint` command with the
 **Runspace** parameter. You can then inspect the breakpoint in the `$breakpoint` variable.
+
+## PSAnsiRendering
+
+This experiment was added in PowerShell 7.2. The feature enables changes how the PowerShell engine
+outputs text and add the `$PSStyle` automatic variable to control ANSI rendering of string output.
+
+```powershell
+PS> $PSStyle | Get-Member
+
+   TypeName: System.Management.Automation.PSStyle
+
+Name             MemberType Definition
+----             ---------- ----------
+Equals           Method     bool Equals(System.Object obj)
+FormatHyperlink  Method     string FormatHyperlink(string text, uri link)
+GetHashCode      Method     int GetHashCode()
+GetType          Method     type GetType()
+ToString         Method     string ToString()
+Background       Property   System.Management.Automation.PSStyle+BackgroundColor Background {get;}
+Blink            Property   string Blink {get;}
+BlinkOff         Property   string BlinkOff {get;}
+Bold             Property   string Bold {get;}
+BoldOff          Property   string BoldOff {get;}
+Foreground       Property   System.Management.Automation.PSStyle+ForegroundColor Foreground {get;}
+Formatting       Property   System.Management.Automation.PSStyle+FormattingData Formatting {get;}
+Hidden           Property   string Hidden {get;}
+HiddenOff        Property   string HiddenOff {get;}
+Italic           Property   string Italic {get;}
+ItalicOff        Property   string ItalicOff {get;}
+OutputRendering  Property   System.Management.Automation.OutputRendering OutputRendering {get;set;}
+Progress         Property   System.Management.Automation.PSStyle+ProgressConfiguration Progress {get;}
+Reset            Property   string Reset {get;}
+Reverse          Property   string Reverse {get;}
+ReverseOff       Property   string ReverseOff {get;}
+Strikethrough    Property   string Strikethrough {get;}
+StrikethroughOff Property   string StrikethroughOff {get;}
+Underline        Property   string Underline {get;}
+UnderlineOff     Property   string UnderlineOff {get;}
+```
+
+The base members return strings of ANSI escape sequences mapped to their names. The values are
+settable to allow customization.
+
+For more information, see [about_Automatic_Variables](/reference/7.2/Microsoft.PowerShell.Core/About/about_Automatic_Variables.md)
+
+> [!NOTE]
+> For C# developers, you can access `PSStyle` as a singleton. Usage will look like this:
+>
+> ```csharp
+> string output = $"{PSStyle.Instance.Foreground.Red}{PSStyle.Instance.Bold}Hello{PSStyle.Instance.Reset}";
+> ```
+>
+> `PSStyle` exists in the System.Management.Automation namespace.
+
+Along with access to `$PSStyle`, this introduces changes to the PowerShell engine. The PowerShell
+formatting system is updated to respect `$PSStyle.OutputRendering`.
+
+- `StringDecorated` type is added to handle ANSI escaped strings.
+- `string IsDecorated` boolean property is added to return if the string contains ANSI escape
+  sequences based on if the string contains ESC or C1 CSI.
+- The `Length` property returns _only_ the length for the text without the ANSI escape sequences.
+- `StringDecorated Substring(int contentLength)` method returns a substring starting at index 0 up
+  to the content length that is not a part of ANSI escape sequences. This is needed for table
+  formatting to truncate strings and preserve ANSI escape sequences that don't take up printable
+  character space.
+- `string ToString()` method stays the same and returns the plaintext version of the string.
+- `string ToString(bool Ansi)` method returns the raw ANSI embedded string if the `Ansi` parameter
+  is true. Otherwise, a plaintext version with ANSI escape sequences removed is returned.
+
+The `FormatHyperlink(string text, uri link)` returns a string containing ANSI escape sequence used
+to decorate hyperlinks. Some terminal hosts, like the
+[Windows Terminal](https://www.microsoft.com/p/windows-terminal/9n0dx20hk701), support this markup,
+which makes the rendered text clickable in the terminal.
+
+## PSAnsiProgress
+
+This experiment was added in PowerShell 7.2. The feature adds the `$PSStyle.Progress` member and
+allows you to control progress view bar rendering.
+
+- `$PSStyle.Progress.Style` - An ANSI string setting the rendering style.
+- `$PSStyle.Progress.MaxWidth` - Sets the max width of the view. Set to `0` for console width.
+  Defaults to `120`
+- `$PSStyle.Progress.View` - An enum with values, `Minimal` and `Classic`. `Classic` is the existing
+  rendering with no changes. `Minimal` is a single line minimal rendering. `Minimal` is the default.
+
+The following example updates the rendering style to a minimal progress bar.
+
+```powershell
+$PSStyle.Progress.View.Minimal
+```
+
+> [!NOTE]
+> You must have the **PSAnsiRendering** experimental feature enabled to use this feature.
 
 ## PSCommandNotFoundSuggestion
 
@@ -190,7 +285,7 @@ When a native command has a non-zero exit code, `$?` is set to `$false`. If the 
 ## PSNullConditionalOperators
 
 Introduces new operators for Null conditional member access operators - `?.` and `?[]`. Null member
-access operators can used on scalar types and array types. Return the value of the accessed member
+access operators can be used on scalar types and array types. Return the value of the accessed member
 if the variable is not null. If the value of the variable is null, then return null.
 
 ```powershell
