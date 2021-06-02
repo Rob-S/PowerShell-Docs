@@ -5,9 +5,9 @@ Locale: en-US
 ms.date: 01/03/2018
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_remote?view=powershell-7.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
-title: about_Remote
+title: about Remote
 ---
-# About Remote
+# about_Remote
 
 ## SHORT DESCRIPTION
 Describes how to run remote commands in PowerShell.
@@ -219,7 +219,7 @@ remote computer where it terminates the remote command.
   configurations, security issues, and other frequently asked questions, see
   [about_Remote_FAQ](about_Remote_FAQ.md).
 
-- For help in resolving remoting errors, see about_Remote_Troubleshooting.
+- For help in resolving remoting errors, see [about_Remote_Troubleshooting](about_Remote_Troubleshooting.md).
 
 - For information about PSSessions and persistent connections, see
   [about_PSSessions](about_PSSessions.md).

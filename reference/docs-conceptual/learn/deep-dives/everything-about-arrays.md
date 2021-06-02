@@ -204,7 +204,7 @@ If your variable is `$null` and you try to index it like an array, you get a
 
 ```powershell
 PS> $empty = $null
-SP> $empty[0]
+PS> $empty[0]
 Error: Cannot index into a null array.
 ```
 
@@ -661,7 +661,7 @@ True
 
 When you have a single value that you would like to verify matches one of several values, you can
 use the `-in` operator. The value would be on the left and the array on the right-hand side of the
-operation.
+operator.
 
 ```powershell
 PS> $data = @('red','green','blue')
@@ -1170,7 +1170,7 @@ TypeName: System.String
 ...
 ```
 
-To prevent that unwrap of the array, you can use `Write-Object -NoEnumerate`.
+To prevent that unwrap of the array, you can use `Write-Output -NoEnumerate`.
 
 ```powershell
 PS> Write-Output -NoEnumerate $data | Get-Member

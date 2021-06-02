@@ -1,13 +1,13 @@
 ---
 external help file: Microsoft.PowerShell.Commands.Utility.dll-Help.xml
-keywords: powershell,cmdlet
 Locale: en-US
 Module Name: Microsoft.PowerShell.Utility
-ms.date: 12/13/2018
+ms.date: 05/27/2021
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-5.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: Invoke-RestMethod
 ---
+
 # Invoke-RestMethod
 
 ## Synopsis
@@ -28,11 +28,16 @@ Invoke-RestMethod [-Method <WebRequestMethod>] [-UseBasicParsing] [-Uri] <Uri>
 ## Description
 
 The `Invoke-RestMethod` cmdlet sends HTTP and HTTPS requests to Representational State Transfer
-(REST) web services that returns richly structured data.
+(REST) web services that return richly structured data.
 
-Windows PowerShell formats the response based to the data type. For an RSS or ATOM feed, Windows
-PowerShell returns the Item or Entry XML nodes. For JavaScript Object Notation (JSON) or XML,
-Windows PowerShell converts (or deserializes) the content into objects.
+PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns
+the Item or Entry XML nodes. For JavaScript Object Notation (JSON) or XML, PowerShell converts, or
+deserializes, the content into `[PSCustomObject]` objects.
+
+> [!NOTE]
+> When the REST endpoint returns multiple objects, the objects are received as an array. If you pipe
+> the output from `Invoke-RestMethod` to another command, it is sent as a single `[Object[]]`
+> object. The contents of that array are not enumerated for the next command on the pipeline.
 
 This cmdlet is introduced in Windows PowerShell 3.0.
 
@@ -139,6 +144,33 @@ $R = Invoke-WebRequest https://website.com/login.aspx
 $R.Forms[0].Name = "MyName"
 $R.Forms[0].Password = "MyPassword"
 Invoke-RestMethod https://website.com/service.aspx -Body $R.Forms[0]
+```
+
+### Example 4: Enumerate returned items on the pipeline
+
+GitHub returns multiple objects an array. If you pipe the output to another command, it is sent as a
+single `[Object[]]`object.
+
+To enumerate the objects into the pipeline, pipe the results to `Write-Output` or wrap the cmdlet in
+parentheses. The following example counts the number of objects returned by GitHub. Then counts the
+number of objects enumerated to the pipeline.
+
+```powershell
+$uri = 'https://api.github.com/repos/microsoftdocs/powershell-docs/issues'
+$x = 0
+Invoke-RestMethod -Uri $uri | ForEach-Object { $x++ }
+$x
+1
+
+$x = 0
+(Invoke-RestMethod -Uri $uri) | ForEach-Object { $x++ }
+$x
+30
+
+$x = 0
+Invoke-RestMethod -Uri $uri | Write-Output | ForEach-Object { $x++ }
+$x
+30
 ```
 
 ## Parameters
@@ -337,16 +369,16 @@ Accept wildcard characters: False
 
 Specifies the method used for the web request. The acceptable values for this parameter are:
 
-- Default
-- Delete
-- Get
-- Head
-- Merge
-- Options
-- Patch
-- Post
-- Put
-- Trace
+- `Default`
+- `Delete`
+- `Get`
+- `Head`
+- `Merge`
+- `Options`
+- `Patch`
+- `Post`
+- `Put`
+- `Trace`
 
 ```yaml
 Type: Microsoft.PowerShell.Commands.WebRequestMethod
@@ -366,8 +398,7 @@ Accept wildcard characters: False
 Saves the response body in the specified output file. Enter a path and file name. If you omit the
 path, the default is the current location.
 
-By default, `Invoke-RestMethod` returns the results to the pipeline. To send the results to a file
-and to the pipeline, use the **Passthru** parameter.
+By default, `Invoke-RestMethod` returns the results to the pipeline.
 
 ```yaml
 Type: System.String
@@ -383,8 +414,13 @@ Accept wildcard characters: False
 
 ### -PassThru
 
-Returns the results, in addition to writing them to a file. This parameter is valid only when the
-**OutFile** parameter is also used in the command.
+This parameter is valid only when the **OutFile** parameter is also used in the command. The intent
+is to have the results written to the file and to the pipeline.
+
+> [!NOTE]
+> When you use the **PassThru** parameter, the output is written to the pipeline but the file is
+> empty. For more information, see
+> [PowerShell Issue #15409](https://github.com/PowerShell/PowerShell/issues/15409).
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -519,11 +555,11 @@ Accept wildcard characters: False
 Specifies a value for the transfer-encoding HTTP response header. The acceptable values for this
 parameter are:
 
-- Chunked
-- Compress
-- Deflate
-- GZip
-- Identity
+- `Chunked`
+- `Compress`
+- `Deflate`
+- `GZip`
+- `Identity`
 
 ```yaml
 Type: System.String

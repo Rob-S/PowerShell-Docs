@@ -1,9 +1,8 @@
 ---
 external help file: Microsoft.PowerShell.Commands.Utility.dll-Help.xml
-keywords: powershell,cmdlet
 Locale: en-US
 Module Name: Microsoft.PowerShell.Utility
-ms.date: 09/03/2020
+ms.date: 05/27/2021
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: Invoke-RestMethod
@@ -11,10 +10,10 @@ title: Invoke-RestMethod
 
 # Invoke-RestMethod
 
-## SYNOPSIS
+## Synopsis
 Sends an HTTP or HTTPS request to a RESTful web service.
 
-## SYNTAX
+## Syntax
 
 ### StandardMethod (Default)
 
@@ -89,14 +88,19 @@ The `Invoke-RestMethod` cmdlet sends HTTP and HTTPS requests to Representational
 
 PowerShell formats the response based to the data type. For an RSS or ATOM feed, PowerShell returns
 the Item or Entry XML nodes. For JavaScript Object Notation (JSON) or XML, PowerShell converts, or
-deserializes, the content into objects.
+deserializes, the content into `[PSCustomObject]` objects.
+
+> [!NOTE]
+> When the REST endpoint returns multiple objects, the objects are received as an array. If you pipe
+> the output from `Invoke-RestMethod` to another command, it is sent as a single `[Object[]]`
+> object. The contents of that array are not enumerated for the next command on the pipeline.
 
 This cmdlet is introduced in Windows PowerShell 3.0.
 
 Beginning in PowerShell 7.0, `Invoke-RestMethod` supports proxy configuration defined by environment
 variables. See the [Notes](#notes) section of this article.
 
-## EXAMPLES
+## Examples
 
 ### Example 1: Get the PowerShell RSS feed
 
@@ -210,6 +214,33 @@ $headers = @{
 Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -Body $body
 ```
 
+### Example 6: Enumerate returned items on the pipeline
+
+GitHub returns multiple objects an array. If you pipe the output to another command, it is sent as a
+single `[Object[]]`object.
+
+To enumerate the objects into the pipeline, pipe the results to `Write-Output` or wrap the cmdlet in
+parentheses. The following example counts the number of objects returned by GitHub. Then counts the
+number of objects enumerated to the pipeline.
+
+```powershell
+$uri = 'https://api.github.com/repos/microsoftdocs/powershell-docs/issues'
+$x = 0
+Invoke-RestMethod -Uri $uri | ForEach-Object { $x++ }
+$x
+1
+
+$x = 0
+(Invoke-RestMethod -Uri $uri) | ForEach-Object { $x++ }
+$x
+30
+
+$x = 0
+Invoke-RestMethod -Uri $uri | Write-Output | ForEach-Object { $x++ }
+$x
+30
+```
+
 ## Parameters
 
 ### -AllowUnencryptedAuthentication
@@ -245,13 +276,13 @@ Specifies the explicit authentication type to use for the request. The default i
 
 Available Authentication Options:
 
-- **None**: This is the default option when **Authentication** is not supplied. No explicit
+- `None`: This is the default option when **Authentication** is not supplied. No explicit
   authentication will be used.
-- **Basic**: Requires **Credential**. The credentials will be used to send an RFC 7617 Basic
+- `Basic`: Requires **Credential**. The credentials will be used to send an RFC 7617 Basic
   Authentication `Authorization: Basic` header in the format of `base64(user:password)`.
-- **Bearer**: Requires **Token**. Will send and RFC 6750 `Authorization: Bearer` header with the
+- `Bearer`: Requires **Token**. Will send and RFC 6750 `Authorization: Bearer` header with the
   supplied token. This is an alias for **OAuth**
-- **OAuth**: Requires **Token**. Will send an RFC 6750 `Authorization: Bearer` header with the
+- `OAuth`: Requires **Token**. Will send an RFC 6750 `Authorization: Bearer` header with the
   supplied token. This is an alias for **Bearer**
 
 Supplying **Authentication** will override any `Authorization` headers supplied to **Headers** or
@@ -624,16 +655,16 @@ Accept wildcard characters: False
 
 Specifies the method used for the web request. The acceptable values for this parameter are:
 
-- Default
-- Delete
-- Get
-- Head
-- Merge
-- Options
-- Patch
-- Post
-- Put
-- Trace
+- `Default`
+- `Delete`
+- `Get`
+- `Head`
+- `Merge`
+- `Options`
+- `Patch`
+- `Post`
+- `Put`
+- `Trace`
 
 The **CustomMethod** parameter can be used for Request Methods not listed above.
 
@@ -677,8 +708,7 @@ Saves the response body in the specified output file. Enter a path and file name
 path, the default is the current location. The name is treated as a literal path. Names that contain
 brackets (`[]`) must be enclosed in single quotes (`'`).
 
-By default, `Invoke-RestMethod` returns the results to the pipeline. To send the results to a file
-and to the pipeline, use the **Passthru** parameter.
+By default, `Invoke-RestMethod` returns the results to the pipeline.
 
 ```yaml
 Type: System.String
@@ -694,8 +724,13 @@ Accept wildcard characters: False
 
 ### -PassThru
 
-Returns the results, in addition to writing them to a file. This parameter is valid only when the
-**OutFile** parameter is also used in the command.
+This parameter is valid only when the **OutFile** parameter is also used in the command. The intent
+is to have the results written to the file and to the pipeline.
+
+> [!NOTE]
+> When you use the **PassThru** parameter, the output is written to the pipeline but the file is not
+> created. For more information, see
+> [PowerShell Issue #15409](https://github.com/PowerShell/PowerShell/issues/15409).
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -977,9 +1012,12 @@ Sets the SSL/TLS protocols that are permissible for the web request. By default 
 protocols supported by the system are allowed. **SslProtocol** allows for limiting to specific
 protocols for compliance purposes.
 
-**SslProtocol** uses the `WebSslProtocol` Flag Enum. It is possible to supply more than one protocol
-using flag notation or combining multiple `WebSslProtocol` options with `-bor`, however supplying
-multiple protocols is not supported on all platforms.
+These values are defined as a flag-based enumeration. You can combine multiple values together to
+set multiple flags using this parameter. The values can be passed to the **SslProtocol** parameter
+as an array of values or as a comma-separated string of those values. The cmdlet will combine the
+values using a binary-OR operation. Passing values as an array is the simplest option and also
+allows you to use tab-completion on the values. You may not be able to supply multiple values on all
+platforms.
 
 > [!NOTE]
 > On non-Windows platforms it may not be possible to supply `Tls` or `Tls12` as an option. Support
@@ -1211,13 +1249,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 -WarningAction, and -WarningVariable. For more information, see
 [about_CommonParameters](https://go.microsoft.com/fwlink/?LinkID=113216).
 
-## INPUTS
+## Inputs
 
 ### System.Object
 
 You can pipe the body of a web request to `Invoke-RestMethod`.
 
-## OUTPUTS
+## Outputs
 
 ### System.Int64, System.String, System.Xml.XmlDocument
 
@@ -1228,7 +1266,7 @@ The output of the cmdlet depends upon the format of the content that is retrieve
 If the request returns JSON strings, `Invoke-RestMethod` returns a **PSObject** that represents the
 strings.
 
-## NOTES
+## Notes
 
 Some features may not be available on all platforms.
 
@@ -1248,13 +1286,13 @@ The value of this property is different rules depending on your platform:
 The environment variables used for `DefaultProxy` initialization on Windows and Unix-based platforms
 are:
 
-- ` HTTP_PROXY`: the hostname or IP address of the proxy server used on HTTP requests.
+- `HTTP_PROXY`: the hostname or IP address of the proxy server used on HTTP requests.
 - `HTTPS_PROXY`: the hostname or IP address of the proxy server used on HTTPS requests.
 - `ALL_PROXY`: the hostname or IP address of the proxy server used on HTTP and HTTPS requests in
   case `HTTP_PROXY` or `HTTPS_PROXY` are not defined.
 - `NO_PROXY`: a comma-separated list of hostnames that should be excluded from proxying.
 
-## RELATED LINKS
+## Related Links
 
 [ConvertTo-Json](ConvertTo-Json.md)
 

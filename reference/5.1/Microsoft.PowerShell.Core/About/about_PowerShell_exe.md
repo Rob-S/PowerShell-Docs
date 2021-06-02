@@ -5,9 +5,9 @@ Locale: en-US
 ms.date: 10/05/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1&WT.mc_id=ps-gethelp
 schema: 2.0.0
-title: about_PowerShell_exe
+title: about PowerShell exe
 ---
-# About PowerShell.exe
+# about_PowerShell_exe
 
 ## Short Description
 Explains how to use the `powershell.exe` command-line interface. Displays the
@@ -198,7 +198,7 @@ string, the [call operator](about_operators.md#special-operators) `&` can be
 used:
 
 ```cmd
-pwsh -Command "& {Get-WinEvent -LogName security}"
+powershell.exe -Command "& {Get-WinEvent -LogName security}"
 ```
 
 If the value of **Command** is a string, **Command** must be the last parameter
@@ -242,27 +242,6 @@ add `exit $LASTEXITCODE` to your command string or script block.
 Similarly, the value 1 is returned when a script-terminating
 (runspace-terminating) error, such as a `throw` or `-ErrorAction Stop`, occurs
 or when execution is interrupted with <kbd>Ctrl</kbd>-<kbd>C</kbd>.
-
-_only_ possible when running **PowerShell.exe** from another PowerShell host.
-The **ScriptBlock** type may be contained in an existing variable, returned
-from an expression, or parsed by the PowerShell host as a literal script block
-enclosed in curly braces `{}`, before being passed to **PowerShell.exe**.
-
-In **cmd.exe**, there is no such thing as a script block (or **ScriptBlock**
-type), so the value passed to **Command** will _always_ be a string. You can
-write a script block inside the string, but instead of being executed it will
-behave exactly as though you typed it at a typical PowerShell prompt, printing
-the contents of the script block back out to you.
-
-A string passed to **Command** will still be executed as PowerShell, so the
-script block curly braces are often not required in the first place when
-running from **cmd.exe**. To execute an inline script block defined inside a
-string, the [call operator](about_operators.md#special-operators)
-`&` can be used:
-
-```console
-"& {<command>}"
-```
 
 #### -Help, -?, /?
 

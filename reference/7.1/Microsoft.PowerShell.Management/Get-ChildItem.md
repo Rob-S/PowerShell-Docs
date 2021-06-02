@@ -352,7 +352,7 @@ In PowerShell 6.2, an alternate view was added to get hard link information.
 Get-ChildItem -Path C:\PathContainingHardLink | Format-Table -View childrenWithHardLink
 ```
 
-### Example 9: Output for Non-Windows Operating Systems
+### Example 10: Output for Non-Windows Operating Systems
 
 In PowerShell 7.1 on Unix systems, the `Get-ChildItem` provides Unix-like output:
 
@@ -496,14 +496,17 @@ Accept wildcard characters: False
 
 ### -Exclude
 
-Specifies, as a string array, a property or property that this cmdlet excludes from the operation.
-The value of this parameter qualifies the **Path** parameter. Enter a path element or pattern, such
-as `*.txt` or `A*`. Wildcard characters are accepted.
+Specifies an array of one or more string patterns to be matched as the cmdlet gets child items. Any
+matching item is excluded from the output. Enter a path element or pattern, such as `*.txt` or `A*`.
+Wildcard characters are accepted.
 
 A trailing asterisk (`*`) in the **Path** parameter is optional. For example, `-Path C:\Test\Logs`
 or `-Path C:\Test\Logs\*`. If a trailing asterisk (`*`) is included, the command recurses into the
 **Path** parameter's subdirectories. Without the asterisk (`*`), the contents of the **Path**
 parameter are displayed. More details are included in Example 5 and the Notes section.
+
+The **Include** and **Exclude** parameters can be used together. However, the exclusions are applied
+after the inclusions, which can affect the final output.
 
 ```yaml
 Type: System.String[]
@@ -613,11 +616,14 @@ Accept wildcard characters: False
 
 ### -Include
 
-Specifies, as a string array, an item or items that this cmdlet includes in the operation. The value
-of this parameter qualifies the **Path** parameter. Enter a path element or pattern, such as
-`"*.txt"`. Wildcard characters are permitted. The **Include** parameter is effective only when the
-command includes the contents of an item, such as `C:\Windows\*`, where the wildcard character
-specifies the contents of the `C:\Windows` directory.
+Specifies an array of one or more string patterns to be matched as the cmdlet gets child items. Any
+matching item is included in the output. Enter a path element or pattern, such as `"*.txt"`.
+Wildcard characters are permitted. The **Include** parameter is effective only when the command
+includes the contents of an item, such as `C:\Windows\*`, where the wildcard character specifies the
+contents of the `C:\Windows` directory.
+
+The **Include** and **Exclude** parameters can be used together. However, the exclusions are applied
+after the inclusions, which can affect the final output.
 
 ```yaml
 Type: System.String[]

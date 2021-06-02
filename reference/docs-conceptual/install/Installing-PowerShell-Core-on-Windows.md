@@ -1,7 +1,7 @@
 ---
 title: Installing PowerShell on Windows
 description: Information about installing PowerShell on Windows
-ms.date: 02/02/2021
+ms.date: 04/27/2021
 ---
 # Installing PowerShell on Windows
 
@@ -29,8 +29,8 @@ find the latest [preview][] version. Scroll down to the **Assets** section of th
 
 The MSI file looks like `PowerShell-<version>-win-<os-arch>.msi`. For example:
 
-- `PowerShell-7.1.2-win-x64.msi`
-- `PowerShell-7.1.2-win-x86.msi`
+- `PowerShell-7.1.3-win-x64.msi`
+- `PowerShell-7.1.3-win-x86.msi`
 
 Once downloaded, double-click the installer and follow the prompts.
 
@@ -68,7 +68,7 @@ installation options:
 The following example shows how to silently install PowerShell with all the install options enabled.
 
 ```powershell
-msiexec.exe /package PowerShell-7.1.2-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
+msiexec.exe /package PowerShell-7.1.3-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
 ```
 
 For a full list of command-line options for `Msiexec.exe`, see
@@ -95,12 +95,12 @@ values are changed for each major release.
 ## <a id="zip" />Installing the ZIP package
 
 PowerShell binary ZIP archives are provided to enable advanced deployment scenarios. Download one of
-the following ZIP archives from the [releases][releases] page.
+the following ZIP archives from the [releases][] page.
 
-- PowerShell-7.1.2-win-x64.zip
-- PowerShell-7.1.2-win-x86.zip
-- PowerShell-7.1.2-win-arm64.zip
-- PowerShell-7.1.2-win-arm32.zip
+- PowerShell-7.1.3-win-x64.zip
+- PowerShell-7.1.3-win-x86.zip
+- PowerShell-7.1.3-win-arm64.zip
+- PowerShell-7.1.3-win-arm32.zip
 
 Depending on how you download the file you may need to unblock the file using the `Unblock-File`
 cmdlet. Unzip the contents to the location of your choice and run `pwsh.exe` from there. Unlike
@@ -110,6 +110,12 @@ remoting over WSMan to work properly, ensure that you've met the [prerequisites]
 Use this method to install the ARM-based version of PowerShell on computers like the Microsoft
 Surface Pro X. For best results, install PowerShell to the to `$env:ProgramFiles\PowerShell\7`
 folder.
+
+> [!NOTE]
+> You can use this method to install any version of PowerShell including the latest:
+> - Stable release: [https://aka.ms/powershell-release?tag=stable](https://aka.ms/powershell-release?tag=stable)
+> - Preview release: [https://aka.ms/powershell-release?tag=preview](https://aka.ms/powershell-release?tag=preview)
+> - LTS release: [https://aka.ms/powershell-release?tag=lts](https://aka.ms/powershell-release?tag=lts)
 
 ## Deploying on Windows 10 IoT Enterprise
 
@@ -235,20 +241,20 @@ as a [.NET Global tool](/dotnet/core/tools/global-tools).
 dotnet tool install --global PowerShell
 ```
 
-The dotnet tool installer adds `$env:USERPROFILE\dotnet\tools` to your `$env:PATH` environment
+The dotnet tool installer adds `$env:USERPROFILE\.dotnet\tools` to your `$env:PATH` environment
 variable. However, the currently running shell doesn't have the updated `$env:PATH`. You can start
 PowerShell from a new shell by typing `pwsh`.
 
-## Install PowerShell via Winget
+## Install PowerShell via the Windows Package Manager
 
 The `winget` command-line tool enables developers to discover, install, upgrade, remove, and
 configure applications on Windows 10 computers. This tool is the client interface to the Windows
 Package Manager service.
 
 > [!NOTE]
-> The `winget` tool is currently a preview. Not all planned functionality is available at this time.
-> You should not use this method in a production deployment scenario. See the [winget] documentation
-> for a list of system requirements and install instructions.
+> Windows Package Manager and the `winget` tool are in public preview and may be substantially
+> modified before they are generally available. See the [documentation][winget] for a list of system
+> requirements and install instructions.
 
 The following commands can be used to install PowerShell using the published `winget` packages:
 
@@ -259,10 +265,11 @@ The following commands can be used to install PowerShell using the published `wi
    ```
 
    ```Output
-   Name               Id                           Version
-   ---------------------------------------------------------------
-   PowerShell         Microsoft.PowerShell         7.1.2
-   PowerShell-Preview Microsoft.PowerShell-Preview 7.1.2-preview.5
+   Name                      Id                                Version
+   ---------------------------------------------------------------------------
+   PowerShell                Microsoft.PowerShell              7.1.3
+   PowerShell Preview (MSIX) Microsoft.PowerShell-Preview-MSIX 7.0.2
+   PowerShell-Preview        Microsoft.PowerShell-Preview      7.2.0-preview.5
    ```
 
 1. Install a version of PowerShell using the `--exact` parameter
@@ -304,7 +311,7 @@ For more information, see
 > supported. The package is built for testing purposes during the preview period.
 
 To manually install the MSIX package on a Windows 10 client, download the MSIX package from our
-GitHub [releases][releases] page. Scroll down to the **Assets** section of the Release you want to
+GitHub [releases][] page. Scroll down to the **Assets** section of the Release you want to
 install. The Assets section may be collapsed, so you may need to click to expand it.
 
 The MSIX file looks like this - `PowerShell-<version>-win-<os-arch>.msix`
@@ -339,6 +346,7 @@ support those methods.
 
 <!-- link references -->
 
+[releases]: https://aka.ms/powershell-release?tag=stable
 [preview]: https://aka.ms/powershell-release?tag=preview
 [latest]: https://aka.ms/powershell-release?tag=stable
 [ssh-remoting]: ../learn/remoting/SSH-Remoting-in-PowerShell-Core.md

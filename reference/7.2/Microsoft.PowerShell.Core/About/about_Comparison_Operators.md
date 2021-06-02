@@ -1,12 +1,12 @@
 ---
 description: Describes the operators that compare values in PowerShell.
 Locale: en-US
-ms.date: 02/19/2021
+ms.date: 03/15/2021
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2&WT.mc_id=ps-gethelp
 schema: 2.0.0
-title: about_Comparison_Operators
+title: about Comparison Operators
 ---
-# About Comparison Operators
+# about_Comparison_Operators
 
 ## Short description
 
@@ -68,7 +68,7 @@ There are a few exceptions:
 - The containment and type operators always return a **Boolean** value
 - The `-replace` operator returns the replacement result
 - The `-match` and `-notmatch` operators also populate the `$Matches` automatic
-  variable
+  variable unless the left-hand side of the expression is a collection.
 
 ## Equality operators
 

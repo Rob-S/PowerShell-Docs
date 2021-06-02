@@ -3,7 +3,7 @@ external help file: System.Management.Automation.dll-Help.xml
 keywords: powershell,cmdlet
 Locale: en-US
 Module Name: Microsoft.PowerShell.Core
-ms.date: 02/18/2021
+ms.date: 03/26/2021
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/foreach-object?view=powershell-7&WT.mc_id=ps-gethelp
 schema: 2.0.0
 title: ForEach-Object
@@ -446,7 +446,7 @@ Output: 5
 
 `Output: 3` is never written because the parallel scriptblock for that iteration was terminated.
 
-### Example 16: Passing variables in nested parallel script ScriptBlockSet
+### Example 17: Passing variables in nested parallel script ScriptBlockSet
 
 You can create a variable outside a `Foreach-Object -Parallel` scoped scriptblock and use
 it inside the scriptblock with the `$using` keyword.
@@ -463,10 +463,9 @@ TestA
 TestA
 ```
 
-You _cannot_ create a variable _inside_ a scoped scriptblock to be used in a nested foreach parallel
-scriptblock.
-
 ```powershell
+# You CANNOT create a variable inside a scoped scriptblock
+# to be used in a nested foreach parallel scriptblock.
 $test1 = 'TestA'
 1..2 | Foreach-Object -Parallel {
     $using:test1
@@ -786,6 +785,9 @@ This cmdlet returns objects that are determined by the input.
   Using the **Parallel** parameter can cause scripts to run much slower than normal. Especially if
   the parallel scripts are trivial. Experiment with **Parallel** to discover where it can be
   beneficial.
+
+- [PipelineVariable](About/about_CommonParameters.md) common parameter variables are _not_ supported
+  in `Foreach-Object -Parallel` scenarios even with the `$using:` keyword.
 
   > [!IMPORTANT]
   > The `ForEach-Object -Parallel` parameter set runs script blocks in parallel on separate process

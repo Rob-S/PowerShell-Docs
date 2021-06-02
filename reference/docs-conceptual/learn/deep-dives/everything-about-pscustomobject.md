@@ -108,7 +108,9 @@ You can also remove properties off of an object.
 $myObject.psobject.properties.remove('ID')
 ```
 
-The `psobject` is a hidden property that gives you access to base object metadata.
+The `.psobject` is an intrinsic member that gives you access to base object metadata. For more
+information about intrinsic members, see [about_Inrinsic_Members](/powershell/module/microsoft.powershell.core/about/about_intrinsic_members).
++
 
 ### Enumerating property names
 
@@ -399,7 +401,7 @@ something and can find a way to work this into your scripts.
 [about_Functions_OutputTypeAttribute]: /powershell/module/microsoft.powershell.core/about/about_functions_outputtypeattribute
 [The many ways to read and write to files]: https://powershellexplained.com/2017-03-18-Powershell-reading-and-saving-data-to-files
 [post by /u/markekraus]: https://www.reddit.com/r/PowerShell/comments/590awc/is_it_possible_to_initialize_a_pscustoobject_with/
-[Adam Bertram]: http://www.adamtheautomator.com/building-custom-object-types-PowerShell-pstypename/
+[Adam Bertram]: http://www.adamtheautomator.com/
 [Mike Shepard]: https://powershellstation.com/2016/05/22/custom-objects-and-pstypename/
 [psunplugged]: https://www.youtube.com/watch?v=Ab46gHXNm8Q
 [Update-TypeData]: /powershell/module/microsoft.powershell.utility/update-typedata

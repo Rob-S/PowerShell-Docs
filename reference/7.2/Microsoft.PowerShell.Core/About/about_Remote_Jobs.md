@@ -4,9 +4,9 @@ Locale: en-US
 ms.date: 11/11/2020
 online version: https://docs.microsoft.com/powershell/module/microsoft.powershell.core/about/about_remote_jobs?view=powershell-7.2&WT.mc_id=ps-gethelp
 schema: 2.0.0
-title: about_Remote_Jobs
+title: about Remote Jobs
 ---
-# About Remote Jobs
+# about_Remote_Jobs
 
 ## Short Description
 Describes how to run background jobs on remote computers.
@@ -21,7 +21,7 @@ jobs types provided by PowerShell to support concurrency.
   machine. For more information, see [about_Jobs](about_Jobs.md).
 - `PSTaskJob` or `ThreadJob` - Commands and scripts run in a separate thread
   within the same process on the local machine. For more information, see
-  [about_Thread_Jobs](/powershell/module/ThreadJob/about_Thread_Jobs).
+  [about_Thread_Jobs](about_Thread_Jobs.md).
 
 Running scripts remotely, on a separate machine or in a separate process,
 provide great isolation. Any errors that occur in the remote job do not affect
